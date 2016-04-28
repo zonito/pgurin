@@ -1,0 +1,26 @@
+# Quack build configuration.
+
+name: pgur.in
+gitignore: true
+
+modules:
+  pyanalytics:
+    repository: https://github.com/zonito/PyAnalytics.git
+    path: pyanalytics
+
+profiles:
+  init:
+    tasks: ['modules']
+  clean:
+    tasks: ['-modules']
+  update:
+    tasks: ['modules']
+  deploy:
+    tasks: ['cmd:grunt deploy']
+  deploy-prod:
+    tasks: ['cmd:grunt deploy-prod']
+  setup:
+    tasks: [
+      'modules',
+      'cmd:pre-commit install'
+    ]
