@@ -34,5 +34,5 @@ class CreateRequest(messages.Message):
 class UrlResponse(messages.Message):
 
     """Response with short url."""
-    short_url = messages.StringField(1)
-    url_uid = messages.StringField(2)
+    short_url = messages.StringField(1, required=True)
+    url_uid = messages.StringField(2, required=True)

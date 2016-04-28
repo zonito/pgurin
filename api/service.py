@@ -27,7 +27,7 @@ class ShortUrlApi(remote.Service):
         Register device store url as well as default url in order to redirect,
         if no local application found or desktop / someother device browser.
         """
-        return RegisterResponse(success=True)
+        return RegisterResponse(success=True, token='..')
 
     @endpoints.method(RegisterRequest, RegisterResponse,
                       path='update', name='pgur.update')
@@ -36,7 +36,7 @@ class ShortUrlApi(remote.Service):
         Update device store url as well as default url in order to redirect,
         if no local application found or desktop / someother device browser.
         """
-        return RegisterResponse(success=True)
+        return RegisterResponse(success=True, token='..')
 
     @endpoints.method(CreateRequest, UrlResponse,
                       path='create', name='pgur.create')
@@ -45,4 +45,4 @@ class ShortUrlApi(remote.Service):
         Update device store url as well as default url in order to redirect,
         if no local application found or desktop / someother device browser.
         """
-        return RegisterResponse(success=True)
+        return UrlResponse(short_url='...', url_uid='...')
