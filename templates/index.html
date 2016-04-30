@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>pgur.in</title>
+    <script src="/scripts/browser_deeplink.js"></script>
+    <link rel="icon" type="image/png" href="//storage.googleapis.com/pgcdn/common/logo.png">
+  </head>
+  <body>
+    Redirecting...
+    <script type="text/javascript">
+      deeplink.setup({
+        iOS: {
+          deeplink: "{{ios_url}}",
+          storeUrl: "{{appstore_url}}"
+        },
+        android: {
+          deeplink: "{{android_url}}",
+          storeUrl: "{{playstore_url}}"
+        },
+        windows: {
+          deeplink: "{{windows_url}}",
+          storeUrl: "{{winstore_url}}"
+        }
+      });
+      deeplink.open("{{default_url}}");
+    </script>
+  </body>
+</html>
+
+

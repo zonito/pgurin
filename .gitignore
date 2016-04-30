@@ -62,3 +62,5 @@ target/
 .ipynb_checkpoints
 
 pyanalytics
+static/scripts/browser-deeplink.min.js
+short_url

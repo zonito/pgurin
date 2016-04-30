@@ -7,6 +7,9 @@ modules:
   pyanalytics:
     repository: https://github.com/zonito/PyAnalytics.git
     path: pyanalytics
+  short_url:
+    repository: https://github.com/Alir3z4/python-short_url.git
+    path: short_url
 
 profiles:
   init:
@@ -16,9 +19,7 @@ profiles:
   update:
     tasks: ['modules']
   deploy:
-    tasks: ['cmd:grunt deploy']
-  deploy-prod:
-    tasks: ['cmd:grunt deploy-prod']
+    tasks: ['cmd:appcfg.py update .']
   setup:
     tasks: [
       'modules',

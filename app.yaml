@@ -45,7 +45,6 @@ handlers:
 
 - url: /.*
   script: route.APPLICATION
-  secure: always
 
 inbound_services:
 - warmup
