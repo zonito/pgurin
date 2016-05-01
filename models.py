@@ -9,8 +9,8 @@ class Accounts(ndb.Model):
     playstore_url = ndb.StringProperty()
     appstore_url = ndb.StringProperty()
     winstore_url = ndb.StringProperty()
-    default_url = ndb.StringProperty(required=True)
-    token = ndb.StringProperty(required=True)
+    default_url = ndb.StringProperty()
+    token = ndb.StringProperty(required=True, indexed=True)
 
 
 class ShortURLs(ndb.Model):

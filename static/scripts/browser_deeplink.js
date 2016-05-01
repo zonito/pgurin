@@ -158,6 +158,10 @@
             }
             return;
         }
+        if (!settings[settings.platform].deeplink.length) {
+             openAppStore(Date.now())();
+             return;
+        }
         timeout = setTimeout(openAppStore(Date.now()), settings.delay);
         var iframe = document.createElement("iframe");
         iframe.onload = function () {

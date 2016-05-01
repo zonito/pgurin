@@ -10,6 +10,12 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: IPMapping
+  properties:
+  - name: short_url
+  - name: created
+    direction: desc
+
 - kind: ShortURLs
   properties:
   - name: account
@@ -18,6 +24,6 @@ indexes:
 
 - kind: IPMapping
   properties:
-  - name: short_url
+  - name: ip_address
   - name: created
     direction: desc

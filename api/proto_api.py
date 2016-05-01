@@ -14,12 +14,15 @@ class RegisterRequest(messages.Message):
     token = messages.StringField(5)
 
 
-class RegisterResponse(messages.Message):
+class Response(messages.Message):
 
     """Response with token once registered."""
     success = messages.BooleanField(1, required=True)
     reason = messages.StringField(2)
-    token = messages.StringField(3, required=True)
+    token = messages.StringField(3)
+    short_url = messages.StringField(4)
+    url_uid = messages.StringField(5)
+    data = messages.StringField(6)
 
 
 class StoreIPRequest(messages.Message):
@@ -37,13 +40,8 @@ class CreateRequest(messages.Message):
     windows_url = messages.StringField(4)
     other_url = messages.StringField(5)
     data = messages.StringField(6)
-
-
-class UrlResponse(messages.Message):
-
-    """Response with short url."""
-    short_url = messages.StringField(1, required=True)
-    url_uid = messages.StringField(2, required=True)
+    url_uid = messages.StringField(7)
+    is_update = messages.BooleanField(8, default=False)
 
 
 class GetRequest(messages.Message):
@@ -52,9 +50,3 @@ class GetRequest(messages.Message):
     token = messages.StringField(1, required=True)
     url_uid = messages.StringField(2)
     user_ip = messages.StringField(3)
-
-
-class GetResponse(messages.Message):
-
-    """Return data from given id / ip"""
-    data = messages.StringField(1, required=True)

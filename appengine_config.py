@@ -13,6 +13,7 @@ CONFIG['webapp2_extras.sessions'] = dict(secret_key='pgurin')
 _APP_ID = os.environ.get('APPLICATION_ID', '')
 IS_PROD = 'pgur-in' in _APP_ID
 IS_LOCAL = _APP_ID.startswith('dev~')
+WEBSITE = 'http://pgur.in/'
 
 # pylint: disable=C0103
 remoteapi_CUSTOM_ENVIRONMENT_AUTHENTICATION = (
