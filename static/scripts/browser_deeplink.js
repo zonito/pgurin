@@ -143,8 +143,10 @@
             settings.platform = "windows";
             document.getElementById("store").innerText = "Visit Store";
         }
-        document.getElementById("store").href = settings[settings.platform].storeUrl;
-        document.getElementById("openapp").href = settings[settings.platform].deeplink;
+        if (isMobile() && settings.hasOwnProperty(settings.platform)) {
+            document.getElementById("store").href = settings[settings.platform].storeUrl;
+            document.getElementById("openapp").href = settings[settings.platform].deeplink;
+        }
     };
 
     /**
@@ -159,8 +161,10 @@
             if (default_url.length) {
                 window.location.href = default_url;
             }
+            document.getElementById("container").style.display = "none";
             return;
         }
+        document.getElementById("openapp").click();
         if (!settings[settings.platform].deeplink.length) {
              openAppStore(Date.now())();
              return;
