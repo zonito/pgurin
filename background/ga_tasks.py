@@ -103,10 +103,7 @@ class GoogleAnalytics(object):
             if self.response.get('success'):
                 self._track_event(
                     category='Registration',
-                    action=(self.post_data.get('default_url') or
-                            self.post_data.get('plastore_url') or
-                            self.post_data.get('appstore_url') or
-                            self.post_data.get('winstore_url')),
+                    action=self.post_data.get('title', 'TITLE'),
                     value=1
                 )
 
@@ -116,10 +113,7 @@ class GoogleAnalytics(object):
             if self.response.get('success'):
                 self._track_event(
                     category='Update Registration',
-                    action=(self.post_data.get('default_url') or
-                            self.post_data.get('plastore_url') or
-                            self.post_data.get('appstore_url') or
-                            self.post_data.get('winstore_url')),
+                    action=self.post_data.get('title', 'TITLE'),
                     value=1
                 )
 

@@ -61,7 +61,10 @@ class HomeHandler(webapp2.RequestHandler):
                 'ios_url': obj.ios_url or '',
                 'appstore_url': obj.account.appstore_url or default_url,
                 'windows_url': obj.windows_url or '',
-                'winstore_url': obj.account.winstore_url or default_url
+                'winstore_url': obj.account.winstore_url or default_url,
+                'description': obj.account.description,
+                'title': obj.account.title,
+                'banner': obj.account.banner
             }
             file_name = os.path.join(
                 os.path.dirname(__file__), 'templates/index.html')

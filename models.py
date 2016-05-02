@@ -10,6 +10,9 @@ class Accounts(ndb.Model):
     appstore_url = ndb.StringProperty()
     winstore_url = ndb.StringProperty()
     default_url = ndb.StringProperty()
+    title = ndb.StringProperty(required=True)
+    banner = ndb.StringProperty(required=True)
+    description = ndb.TextProperty()
     token = ndb.StringProperty(required=True, indexed=True)
 
 

@@ -24,6 +24,9 @@ def register(request):
         appstore_url=request.appstore_url,
         winstore_url=request.winstore_url,
         default_url=request.default_url,
+        title=request.title,
+        banner=request.banner,
+        description=request.description,
         token=token
     )
     account.put()
@@ -48,6 +51,12 @@ def update(request):
         account.winstore_url = request.winstore_url
     if request.default_url:
         account.default_url = request.default_url
+    if request.title:
+        account.title = request.title
+    if request.banner:
+        account.banner = request.banner
+    if request.description:
+        account.description = request.description
     account.put()
     return True, None
 

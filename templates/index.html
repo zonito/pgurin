@@ -3,29 +3,77 @@
   <head>
     <meta charset="utf-8">
     <title>pgur.in</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/scripts/browser_deeplink.js"></script>
     <link rel="icon" type="image/png" href="//storage.googleapis.com/pgcdn/common/logo.png">
+    <style type="text/css">
+    .container {
+      border-radius: 25px 25px 15px 15px;
+      box-shadow: 1px 1px 15px 2px #D8D8D8;
+      margin: 10% auto;
+      text-align: center;
+      width: 90%;
+    }
+    .container img {
+      border-radius: 25px 25px 0 0;
+      width: 100%;
+    }
+    .container > div {
+      text-align: left;
+      padding: 20px;
+    }
+    .container h3 {
+      margin: 0;
+    }
+    .container p {
+      color: #666;
+      font-size: 89%;
+    }
+    .container a {
+      border-radius: 10px;
+      border: 1px solid #25B5D2;
+      color: #25B5D2;
+      float: right;
+      font-size: 85%;
+      padding: 10px;
+      text-decoration: none;
+    }
+    #store {
+      background-color: #F9F9F9;
+      border: 1px solid #E8E8E8;
+      color: #505050;
+      float: right;
+      margin-right: 15px;
+    }
+    </style>
   </head>
   <body>
-    Redirecting...
+    <div class="container">
+      <img src="{{banner}}">
+      <div>
+        <h3>{{title}}</h3>
+        <p style="margin-bottom: 25px;">{{description}}</p>
+        <a href="#" id="openapp">Open in App</a>
+        <a href="#" id="store">Visit Playstore</a>
+        <p style="clear: both;"></p>
+      </div>
+    </div>
     <script type="text/javascript">
-      deeplink.setup({
-        iOS: {
-          deeplink: "{{ios_url}}",
-          storeUrl: "{{appstore_url}}"
-        },
-        android: {
-          deeplink: "{{android_url}}",
-          storeUrl: "{{playstore_url}}"
-        },
-        windows: {
-          deeplink: "{{windows_url}}",
-          storeUrl: "{{winstore_url}}"
-        }
-      });
-      deeplink.open("{{default_url}}");
+    deeplink.setup({
+      iOS: {
+        deeplink: "{{ios_url}}",
+        storeUrl: "{{appstore_url}}"
+      },
+      android: {
+        deeplink: "{{android_url}}",
+        storeUrl: "{{playstore_url}}"
+      },
+      windows: {
+        deeplink: "{{windows_url}}",
+        storeUrl: "{{winstore_url}}"
+      }
+    });
+    deeplink.open("{{default_url}}");
     </script>
   </body>
 </html>
-
-

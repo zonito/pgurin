@@ -37,7 +37,7 @@
     var defaults = {
         iOS: {},
         android: {},
-        delay: 1000,
+        delay: 5000,
         delta: 500
     };
 
@@ -132,16 +132,19 @@
      */
     var setup = function (options) {
         settings = extend(defaults, options);
-
         if (isAndroid()) {
             settings.platform = "android";
         }
         if (isIOS()) {
             settings.platform = "iOS";
+            document.getElementById("store").innerText = "Visit Appstore";
         }
         if (isWindows()) {
             settings.platform = "windows";
+            document.getElementById("store").innerText = "Visit Store";
         }
+        document.getElementById("store").href = settings[settings.platform].storeUrl;
+        document.getElementById("openapp").href = settings[settings.platform].deeplink;
     };
 
     /**
