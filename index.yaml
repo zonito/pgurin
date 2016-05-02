@@ -12,6 +12,12 @@ indexes:
 
 - kind: IPMapping
   properties:
+  - name: ip_address
+  - name: created
+    direction: desc
+
+- kind: IPMapping
+  properties:
   - name: short_url
   - name: created
     direction: desc
@@ -19,11 +25,5 @@ indexes:
 - kind: ShortURLs
   properties:
   - name: account
-  - name: created
-    direction: desc
-
-- kind: IPMapping
-  properties:
-  - name: ip_address
   - name: created
     direction: desc

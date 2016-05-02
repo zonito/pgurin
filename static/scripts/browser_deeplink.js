@@ -118,7 +118,7 @@
             var link = settings[settings.platform].storeUrl;
             var wait = settings.delay + settings.delta;
             if (typeof link === "string" && (Date.now() - ts) < wait) {
-                window.location.href = link;
+                window.location = link;
             }
         };
     };
@@ -172,7 +172,6 @@
         iframe.src = settings[settings.platform].deeplink;
         iframe.setAttribute("style", "display:none;");
         document.body.appendChild(iframe);
-        return true;
     };
 
     // Public API

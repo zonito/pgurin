@@ -2,10 +2,36 @@
   Main file which is responsible to instantiate appengine application.
 """
 
+import appengine_config
+import json
+import logging
 import models
 import os
 import webapp2
+from google.appengine.api import taskqueue
 from google.appengine.ext.webapp import template
+
+
+def _send_to_ga(url_id, ip_address, token):
+    """Send visits to GA for tracking."""
+    try:
+        wsgi_info = {
+            'env': {
+                'PATH_INFO': '/redirect/' + url_id,
+                'REMOTE_ADDR': ip_address
+            },
+            'response': json.dumps({'url_uid': url_id}),
+            'post_data': json.dumps({'token': token})
+        }
+        taskqueue.add(
+            url='/task/analytics',
+            params={'wsgi_info': json.dumps(wsgi_info),
+                    'code': appengine_config.GOOGLE_TRACKING_CODE,
+                    'domain': appengine_config.DOMAIN}
+        )
+    except taskqueue.TaskTooLargeError as ttle:
+        logging.debug(ttle)
+    return True
 
 
 class HomeHandler(webapp2.RequestHandler):
@@ -21,10 +47,12 @@ class HomeHandler(webapp2.RequestHandler):
             if not obj:
                 self.response.out.write('404 Page not found')
                 return
+            ip_address = os.environ['REMOTE_ADDR']
             models.IPMapping(
-                ip_address=os.environ['REMOTE_ADDR'],
+                ip_address=ip_address,
                 short_url=obj
             ).put()
+            _send_to_ga(obj.url_id, ip_address, obj.account.token)
             default_url = obj.account.default_url
             context = {
                 'default_url': default_url,

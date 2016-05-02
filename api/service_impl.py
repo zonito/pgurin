@@ -103,22 +103,22 @@ def get(request):
     """Return data object from given ip / id."""
     account = _get_account(request.token)
     if not account:
-        return False, _NO_ACCOUNT, None
+        return False, _NO_ACCOUNT, None, None
     if request.url_uid:
         obj = models.ShortURLs.query(
             models.ShortURLs.url_id == request.url_uid
         ).get()
         if not obj:
-            return False, 'Invalid URL Id', None
-        return True, None, json.dumps(obj.data)
+            return False, 'Invalid URL Id', None, None
+        return True, None, json.dumps(obj.data), request.url_uid
     if request.user_ip:
         ip_records = models.IPMapping.query(
             models.IPMapping.ip_address == request.user_ip
         ).order(-models.IPMapping.created).fetch(100)
         if not ip_records:
-            return False, 'No Data available', None
+            return False, 'No Data available', None, None
         data = ip_records[0].short_url.data
         for ip_record in ip_records:
             ip_record.key.delete()
-        return True, None, json.dumps(data)
-    return False, 'Either IP Address or URL ID required.', None
+        return True, None, json.dumps(data), ip_records[0].short_url.url_id
+    return False, 'Either IP Address or URL ID required.', None, None

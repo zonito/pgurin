@@ -58,5 +58,6 @@ class ShortUrlApi(remote.Service):
                       path='get', name='pgur.get')
     def get(self, request):
         """Return data from given ip address or url id."""
-        success, reason, data = service_impl.get(request)
-        return Response(success=success, reason=reason, data=data)
+        success, reason, data, url_uid = service_impl.get(request)
+        return Response(
+            success=success, reason=reason, data=data, url_uid=url_uid)

@@ -32,7 +32,8 @@ class GoogleAnalytics(object):
     def _get_session(self):
         """Return session object."""
         session = Session()
-        session.session_id = self.post_data.get('user_id', 0)
+        ip_address = self.env.get('REMOTE_ADDR', '1.0.0.0').replace(':', '.')
+        session.session_id = int(ip_address.replace('.', ''))
         return session
 
     def _get_tracker(self):
@@ -46,26 +47,24 @@ class GoogleAnalytics(object):
         visitor.user_agent = self.env.get('HTTP_USER_AGENT', 'Other!')
         visitor.locale = self.env.get(
             'HTTP_ACCEPT_LANGUAGE', 'en,en').split(',')[0]
-        visitor.unique_id = int(self.post_data.get('user_id', 0))
-        ip_address = self.env.get('REMOTE_ADDR', '1.0.0.0')
+        ip_address = self.env.get('REMOTE_ADDR', '1.0.0.0').replace(':', '.')
+        visitor.unique_id = int(ip_address.split('.')[0])
         visitor.ip_address = ip_address
-        if self.post_data.get('private_key'):
-            visitor.source = 'android'
+        visitor.source = 'pgur.in'
         return visitor
 
     def _get_event(self, category=None, action=None, value=0):
         """Return event object."""
-        private_key = self.post_data.get('private_key', 'web|x')
         api_type = self.env.get('PATH_INFO').replace(
             '/_ah/spi/', '').split('.')
         return Event(
             category=category or api_type[0],
             action=action or (api_type[1] if len(api_type) > 1 else ''),
-            label=private_key.split('|')[0],
+            label=self.post_data.get('token', 'Registration'),
             value=value or self.wsgi_info.get('content-length', 0)
         )
 
-    @utils.InTransaction(retries=3)
+    # @utils.InTransaction(retries=3)
     def _track_event(self, category=None, action=None, value=1):
         """Global method for sending GA."""
         if category and action and value:
@@ -98,6 +97,61 @@ class GoogleAnalytics(object):
         except Exception as exp:
             logging.warning(exp)
 
+    def track_register(self):
+        """Track registration"""
+        if 'ShortUrlApi.register' in self.env.get('PATH_INFO'):
+            if self.response.get('success'):
+                self._track_event(
+                    category='Registration',
+                    action=(self.post_data.get('default_url') or
+                            self.post_data.get('plastore_url') or
+                            self.post_data.get('appstore_url') or
+                            self.post_data.get('winstore_url')),
+                    value=1
+                )
+
+    def track_update(self):
+        """Track update registration"""
+        if 'ShortUrlApi.update' in self.env.get('PATH_INFO'):
+            if self.response.get('success'):
+                self._track_event(
+                    category='Update Registration',
+                    action=(self.post_data.get('default_url') or
+                            self.post_data.get('plastore_url') or
+                            self.post_data.get('appstore_url') or
+                            self.post_data.get('winstore_url')),
+                    value=1
+                )
+
+    def track_create(self):
+        """Track created url"""
+        if 'ShortUrlApi.url_create' in self.env.get('PATH_INFO'):
+            if self.response.get('success'):
+                self._track_event(
+                    category='Created',
+                    action=self.response.get('url_uid', '-'),
+                    value=1
+                )
+
+    def track_get(self):
+        """Track get data calls"""
+        if 'ShortUrlApi.get' in self.env.get('PATH_INFO'):
+            if self.response.get('success'):
+                self._track_event(
+                    category='GetData',
+                    action=self.response.get('url_uid', '-'),
+                    value=1
+                )
+
+    def track_visits(self):
+        """Track visits"""
+        if 'redirect' in self.env.get('PATH_INFO'):
+            self._track_event(
+                category='Visits',
+                action=self.response.get('url_uid', '-'),
+                value=1
+            )
+
     def track(self, wsgi_info, google_tracking_code, domain):
         """To track all required information, call deferred."""
         self.wsgi_info = wsgi_info
@@ -106,8 +160,12 @@ class GoogleAnalytics(object):
         self.domain = domain
         self.post_data = json.loads(wsgi_info.get('post_data'))
         self.response = json.loads(wsgi_info.get('response', '{}'))
-        self._track_event()
         self.track_pageview()
+        self.track_register()
+        self.track_update()
+        self.track_create()
+        self.track_get()
+        self.track_visits()
 
 
 class GoogleAnalyticsHandler(webapp2.RequestHandler):
