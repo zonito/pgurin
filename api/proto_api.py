@@ -43,8 +43,9 @@ class CreateRequest(messages.Message):
     windows_url = messages.StringField(4)
     other_url = messages.StringField(5)
     data = messages.StringField(6)
-    url_uid = messages.StringField(7)
-    is_update = messages.BooleanField(8, default=False)
+    delay = messages.IntegerField(7, default=1000)
+    url_uid = messages.StringField(8)
+    is_update = messages.BooleanField(9, default=False)
 
 
 class GetRequest(messages.Message):

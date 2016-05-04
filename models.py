@@ -24,6 +24,7 @@ class ShortURLs(ndb.Model):
     windows_url = ndb.StringProperty()
     other_url = ndb.StringProperty()
     data = ndb.JsonProperty(required=True)
+    delay = ndb.IntegerProperty(default=1000)
     account = ndb.StructuredProperty(Accounts, required=True)
     created = ndb.DateTimeProperty(auto_now=True)
 

@@ -87,6 +87,7 @@ def create(request):
         obj.windows_url = request.windows_url
         obj.other_url = request.other_url
         obj.data = request.data
+        obj.delay = request.delay or 1000
         obj.put()
         return True, None, request.url_uid
     obj = True
@@ -102,7 +103,8 @@ def create(request):
         windows_url=request.windows_url,
         other_url=request.other_url,
         data=data,
-        account=account
+        account=account,
+        delay=request.delay or 1000
     )
     obj.put()
     return True, None, url_uid

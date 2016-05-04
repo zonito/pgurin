@@ -64,7 +64,8 @@ class HomeHandler(webapp2.RequestHandler):
                 'winstore_url': obj.account.winstore_url or default_url,
                 'description': obj.account.description,
                 'title': obj.account.title,
-                'banner': obj.account.banner
+                'banner': obj.account.banner,
+                'delay': obj.delay
             }
             file_name = os.path.join(
                 os.path.dirname(__file__), 'templates/index.html')

@@ -1,11 +1,3 @@
-/**
- * browser-deeplink v0.1
- *
- * Author: Hampus Ohlsson, Nov 2014
- * GitHub: http://github.com/hampusohlsson/browser-deeplink
- *
- * MIT License
- */
 /*jslint browser: true */
 /*global window,define */
 
@@ -37,7 +29,6 @@
     var defaults = {
         iOS: {},
         android: {},
-        delay: 5000,
         delta: 500
     };
 
@@ -162,6 +153,10 @@
                 window.location.href = default_url;
             }
             document.getElementById("container").style.display = "none";
+            return;
+        }
+        if (settings.delay <= 1000) {
+            openAppStore(Date.now())();
             return;
         }
         document.getElementById("openapp").click();
