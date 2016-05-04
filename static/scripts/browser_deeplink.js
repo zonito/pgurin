@@ -158,6 +158,7 @@
         if (settings.delay <= 1000) {
             openAppStore(Date.now())();
             document.getElementById('openapp').style.display = "none";
+            document.getElementById('store').style.margin = "0px";
             return;
         }
         document.getElementById("openapp").click();
