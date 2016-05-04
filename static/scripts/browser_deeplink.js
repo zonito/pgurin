@@ -157,6 +157,7 @@
         }
         if (settings.delay <= 1000) {
             openAppStore(Date.now())();
+            document.getElementById('openapp').style.display = "none";
             return;
         }
         document.getElementById("openapp").click();
