@@ -123,6 +123,7 @@ def get(request):
             return False, 'Invalid URL Id', None, None
         return True, None, json.dumps(obj.data), request.url_uid
     if request.user_ip:
+        logging.info(request.user_ip)
         ip_records = models.IPMapping.query(
             models.IPMapping.ip_address == request.user_ip
         ).order(-models.IPMapping.created).fetch(100)

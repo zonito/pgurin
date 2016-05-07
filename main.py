@@ -47,6 +47,11 @@ class HomeHandler(webapp2.RequestHandler):
             if not obj:
                 self.response.out.write('404 Page not found')
                 return
+            user_agent = self.request.headers.get('User-Agent', '..').lower()
+            for bot in ['applebot', 'slurp', 'dataminr', 'fb_iab']:
+                if bot in user_agent:
+                    self.redirect(obj.account.default_url)
+                    return
             ip_address = os.environ['REMOTE_ADDR']
             models.IPMapping(
                 ip_address=ip_address,
