@@ -1,0 +1,5 @@
+cron:
+- description: Delete record which are older than 2 days
+  url: /cron/removeip
+  schedule: every 12 hours synchronized
+  timezone: Asia/Singapore
