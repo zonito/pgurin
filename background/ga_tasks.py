@@ -53,7 +53,7 @@ class GoogleAnalytics(object):
         visitor.source = 'pgur.in'
         return visitor
 
-    def _get_event(self, category=None, action=None, value=0):
+    def _get_event(self, category=None, action=None, value=1):
         """Return event object."""
         api_type = self.env.get('PATH_INFO').replace(
             '/_ah/spi/', '').split('.')
@@ -103,8 +103,7 @@ class GoogleAnalytics(object):
             if self.response.get('success'):
                 self._track_event(
                     category='Registration',
-                    action=self.post_data.get('title', 'TITLE'),
-                    value=1
+                    action=self.post_data.get('title', 'TITLE')
                 )
 
     def track_update(self):
@@ -113,8 +112,7 @@ class GoogleAnalytics(object):
             if self.response.get('success'):
                 self._track_event(
                     category='Update Registration',
-                    action=self.post_data.get('title', 'TITLE'),
-                    value=1
+                    action=self.post_data.get('title', 'TITLE')
                 )
 
     def track_create(self):
@@ -123,8 +121,7 @@ class GoogleAnalytics(object):
             if self.response.get('success'):
                 self._track_event(
                     category='Created',
-                    action=self.response.get('url_uid', '-'),
-                    value=1
+                    action=self.response.get('url_uid', '-')
                 )
 
     def track_get(self):
@@ -133,8 +130,12 @@ class GoogleAnalytics(object):
             if self.response.get('success'):
                 self._track_event(
                     category='GetData',
-                    action=self.response.get('url_uid', '-'),
-                    value=1
+                    action=self.response.get('url_uid', '-')
+                )
+            else:
+                self._track_event(
+                    category='GetDataFailed',
+                    action=self.response.get('url_uid', '-')
                 )
 
     def track_visits(self):
@@ -142,8 +143,7 @@ class GoogleAnalytics(object):
         if 'redirect' in self.env.get('PATH_INFO'):
             self._track_event(
                 category='Visits',
-                action=self.response.get('url_uid', '-'),
-                value=1
+                action=self.response.get('url_uid', '-')
             )
 
     def track(self, wsgi_info, google_tracking_code, domain):

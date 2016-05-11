@@ -48,16 +48,18 @@ class HomeHandler(webapp2.RequestHandler):
                 self.response.out.write('404 Page not found')
                 return
             user_agent = self.request.headers.get('User-Agent', '..').lower()
+            is_bot = False
             for bot in ['applebot', 'slurp', 'dataminr', 'fb_iab']:
                 if bot in user_agent:
-                    self.redirect(str(obj.account.default_url))
-                    return
-            ip_address = os.environ['REMOTE_ADDR']
-            models.IPMapping(
-                ip_address=ip_address,
-                short_url=obj
-            ).put()
-            _send_to_ga(obj.url_id, ip_address, obj.account.token)
+                    is_bot = True
+            if not is_bot:
+                ip_address = os.environ['REMOTE_ADDR']
+                models.IPMapping(
+                    ip_address=ip_address,
+                    short_url=obj
+                ).put()
+                logging.info(ip_address)
+                _send_to_ga(obj.url_id, ip_address, obj.account.token)
             default_url = obj.account.default_url
             context = {
                 'default_url': default_url,
