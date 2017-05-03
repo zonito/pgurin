@@ -93,7 +93,8 @@ def create(request):
     obj = True
     url_uid = ''
     while obj:
-        url_uid = short_url.encode_url(random.randint(1, 1000000000))
+        max_num = 1000000000000 if request.is_claim else 1000000000
+        url_uid = short_url.encode_url(random.randint(1, max_num))
         logging.info('Trying ShortURL: %s', url_uid)
         obj = models.ShortURLs.query(models.ShortURLs.url_id == url_uid).get()
     obj = models.ShortURLs(
