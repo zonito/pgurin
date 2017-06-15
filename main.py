@@ -44,6 +44,9 @@ class HomeHandler(webapp2.RequestHandler):
         if 'claim/' in url_id:
             logging.info(url_id)
             url_id = url_id.replace('claim/', '')
+        if 'group/' in url_id:
+            logging.info('GroupLink: %s', url_id)
+            url_id = url_id.replace('group/', '')
         if url_id:
             obj = models.ShortURLs.query(
                 models.ShortURLs.url_id == url_id).get()
