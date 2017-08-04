@@ -41,6 +41,9 @@ class HomeHandler(webapp2.RequestHandler):
     def get(self):
         """GET request."""
         url_id = self.request.path[1:]
+        if 'claim/' in url_id:
+            logging.info(url_id)
+            url_id = url_id.replace('claim/', '')
         if url_id:
             obj = models.ShortURLs.query(
                 models.ShortURLs.url_id == url_id).get()

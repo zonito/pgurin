@@ -49,9 +49,12 @@ class ShortUrlApi(remote.Service):
         """Create Short url from given details"""
         success, reason, url_uid = service_impl.create(request)
         if success:
+            short_url = appengine_config.WEBSITE
+            if request.is_claim:
+                short_url += 'claim/'
+            short_url += url_uid
             return Response(
-                short_url=appengine_config.WEBSITE + url_uid,
-                url_uid=url_uid, success=success)
+                short_url=short_url, url_uid=url_uid, success=success)
         return Response(success=success, reason=reason)
 
     @endpoints.method(GetRequest, Response,

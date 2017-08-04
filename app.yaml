@@ -1,5 +1,5 @@
 application: pgur-in
-version: 1-0-0
+version: 1-0-1
 runtime: python27
 threadsafe: true
 api_version: 1
@@ -40,7 +40,7 @@ handlers:
   secure: always
 
 # Endpoints handler
-- url: /_ah/spi/.*
+- url: /_ah/api/.*
   script: route.API
 
 - url: /.*
@@ -52,7 +52,9 @@ inbound_services:
 libraries:
 - name: webapp2
   version: latest
-- name: endpoints
+- name: pycrypto
+  version: latest
+- name: ssl
   version: latest
 
 error_handlers:
@@ -64,6 +66,10 @@ error_handlers:
 builtins:
 - deferred: on
 - remote_api: on
+
+env_variables:
+  ENDPOINTS_SERVICE_NAME: pg.endpoints.pgur-in.cloud.goog
+  ENDPOINTS_SERVICE_VERSION: 2017-08-04r0
 
 skip_files:
 - ^(.*/)?#.*#$

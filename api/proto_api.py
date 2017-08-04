@@ -46,6 +46,7 @@ class CreateRequest(messages.Message):
     delay = messages.IntegerField(7, default=1000)
     url_uid = messages.StringField(8)
     is_update = messages.BooleanField(9, default=False)
+    is_claim = messages.BooleanField(10, default=False)
 
 
 class GetRequest(messages.Message):

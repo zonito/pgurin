@@ -1,0 +1,236 @@
+{
+  "basePath": "/_ah/api",
+  "consumes": [
+    "application/json"
+  ],
+  "definitions": {
+    "ApiProtoApiCreateRequest": {
+      "properties": {
+        "android_url": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string"
+        },
+        "delay": {
+          "default": 1000,
+          "format": "int64",
+          "type": "string"
+        },
+        "ios_url": {
+          "type": "string"
+        },
+        "is_claim": {
+          "type": "boolean"
+        },
+        "is_update": {
+          "type": "boolean"
+        },
+        "other_url": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "url_uid": {
+          "type": "string"
+        },
+        "windows_url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "token"
+      ],
+      "type": "object"
+    },
+    "ApiProtoApiGetRequest": {
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "url_uid": {
+          "type": "string"
+        },
+        "user_ip": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "token"
+      ],
+      "type": "object"
+    },
+    "ApiProtoApiRegisterRequest": {
+      "properties": {
+        "appstore_url": {
+          "type": "string"
+        },
+        "banner": {
+          "type": "string"
+        },
+        "default_url": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "playstore_url": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "winstore_url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "banner",
+        "title"
+      ],
+      "type": "object"
+    },
+    "ApiProtoApiResponse": {
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "short_url": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "token": {
+          "type": "string"
+        },
+        "url_uid": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "success"
+      ],
+      "type": "object"
+    }
+  },
+  "host": "pg.endpoints.pgur-in.cloud.goog",
+  "info": {
+    "description": "Prediction Short URL API",
+    "title": "pgurin",
+    "version": "v1"
+  },
+  "paths": {
+    "/pgurin/v1/get": {
+      "post": {
+        "operationId": "ShortUrlApi_get",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ApiProtoApiGetRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "schema": {
+              "$ref": "#/definitions/ApiProtoApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/pgurin/v1/register": {
+      "post": {
+        "operationId": "ShortUrlApi_register",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ApiProtoApiRegisterRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "schema": {
+              "$ref": "#/definitions/ApiProtoApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/pgurin/v1/update": {
+      "post": {
+        "operationId": "ShortUrlApi_update",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ApiProtoApiRegisterRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "schema": {
+              "$ref": "#/definitions/ApiProtoApiResponse"
+            }
+          }
+        }
+      }
+    },
+    "/pgurin/v1/url/create": {
+      "post": {
+        "operationId": "ShortUrlApi_urlCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ApiProtoApiCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "schema": {
+              "$ref": "#/definitions/ApiProtoApiResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "google_id_token": {
+      "authorizationUrl": "",
+      "flow": "implicit",
+      "type": "oauth2",
+      "x-google-issuer": "accounts.google.com",
+      "x-google-jwks_uri": "https://www.googleapis.com/oauth2/v1/certs"
+    }
+  },
+  "swagger": "2.0"
+}

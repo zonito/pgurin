@@ -7,6 +7,9 @@ import os
 import time
 
 from google.appengine.api import taskqueue
+from google.appengine.ext import vendor
+
+vendor.add('lib')
 
 CONFIG = {}
 CONFIG['webapp2_extras.sessions'] = dict(secret_key='pgurin')
@@ -73,6 +76,10 @@ def webapp_add_wsgi_middleware(app):
             if wsgi_info.get('status') == '200 OK' and is_api_call:
                 del wsgi_info['env']['wsgi.input']
                 del wsgi_info['env']['wsgi.errors']
+                del wsgi_info['env']['google.api.config.service']
+                del wsgi_info['env']['google.api.config.method_registry']
+                del wsgi_info['env']['google.api.config.reporting_rules']
+                del wsgi_info['env']['google.api.config.method_info']
                 try:
                     taskqueue.add(
                         url='/task/analytics',
