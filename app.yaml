@@ -40,7 +40,8 @@ handlers:
   secure: always
 
 # Endpoints handler
-- url: /_ah/api/.*
+# - url: /_ah/api/.*
+- url: /_ah/spi/.*
   script: route.API
 
 - url: /.*
@@ -52,10 +53,12 @@ inbound_services:
 libraries:
 - name: webapp2
   version: latest
-- name: pycrypto
+- name: endpoints
   version: latest
-- name: ssl
-  version: latest
+# - name: pycrypto
+#   version: latest
+# - name: ssl
+#   version: latest
 
 error_handlers:
   - file: templates/default_error.html
@@ -67,9 +70,9 @@ builtins:
 - deferred: on
 - remote_api: on
 
-env_variables:
-  ENDPOINTS_SERVICE_NAME: pg.endpoints.pgur-in.cloud.goog
-  ENDPOINTS_SERVICE_VERSION: 2017-08-04r0
+# env_variables:
+#   ENDPOINTS_SERVICE_NAME: pg.endpoints.pgur-in.cloud.goog
+#   ENDPOINTS_SERVICE_VERSION: 2017-08-04r0
 
 skip_files:
 - ^(.*/)?#.*#$
