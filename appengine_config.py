@@ -69,9 +69,11 @@ def webapp_add_wsgi_middleware(app):
             except Exception:
                 raise
             if result is not None:
+                wsgi_info['content-length'] = 0
+                wsgi_info['response'] = ''
                 for value in result:
-                    wsgi_info['content-length'] = len(value)
-                    wsgi_info['response'] = value
+                    wsgi_info['content-length'] += 1
+                    wsgi_info['response'] += value
                     yield value
             if wsgi_info.get('status') == '200 OK' and is_api_call:
                 del wsgi_info['env']['wsgi.input']
