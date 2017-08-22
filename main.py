@@ -41,12 +41,15 @@ class HomeHandler(webapp2.RequestHandler):
     def get(self):
         """GET request."""
         url_id = self.request.path[1:]
+        group_id = ''
         if 'claim/' in url_id:
             logging.info(url_id)
             url_id = url_id.replace('claim/', '')
         if 'group/' in url_id:
-            logging.info('GroupLink: %s', url_id)
-            url_id = url_id.replace('group/', '')
+            logging.info(url_id)
+            group_id = url_id.replace('group/', '')
+            url_id = '6sgxay'
+            logging.info('GroupLink: %s', group_id)
         if url_id:
             obj = models.ShortURLs.query(
                 models.ShortURLs.url_id == url_id).get()
@@ -68,10 +71,13 @@ class HomeHandler(webapp2.RequestHandler):
                 _send_to_ga(obj.url_id, ip_address, obj.account.token)
             default_url = obj.account.default_url
             playstore_url = obj.account.playstore_url or default_url
+            playstore_url = (
+                playstore_url + '&utm_content=' + url_id + '&utm_term=' +
+                group_id)
             context = {
                 'default_url': default_url,
                 'android_url': obj.android_url or '',
-                'playstore_url': playstore_url + '?utm_content=' + url_id,
+                'playstore_url': playstore_url,
                 'ios_url': obj.ios_url or '',
                 'appstore_url': obj.account.appstore_url or default_url,
                 'windows_url': obj.windows_url or '',
