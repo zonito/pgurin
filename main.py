@@ -8,6 +8,7 @@ import logging
 import models
 import os
 import webapp2
+import urllib
 from google.appengine.api import taskqueue
 from google.appengine.ext.webapp import template
 
@@ -76,8 +77,10 @@ class HomeHandler(webapp2.RequestHandler):
                          utm_term)
             playstore_url = playstore_url + utm_query
             if url_id == 'uqwa6x':
-                playstore_url = ('https://drfa7.app.goo.gl/?link=' +
-                                 playstore_url + '&apn=com.guru.prediction')
+                params = urllib.urlencode(
+                    dict(link=playstore_url, apn='com.guru.prediction'))
+                playstore_url = ('https://drfa7.app.goo.gl/?' + params)
+            logging.info(playstore_url)
             context = {
                 'default_url': default_url,
                 'android_url': obj.android_url or '',
