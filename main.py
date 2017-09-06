@@ -41,15 +41,15 @@ class HomeHandler(webapp2.RequestHandler):
     def get(self):
         """GET request."""
         url_id = self.request.path[1:]
-        group_id = ''
+        utm_term = 'normal'
         if 'claim/' in url_id:
             logging.info(url_id)
             url_id = url_id.replace('claim/', '')
+            utm_term = 'claim'
         if 'group/' in url_id:
-            logging.info(url_id)
-            group_id = url_id.replace('group/', '')
-            url_id = '6sgxay'
-            logging.info('GroupLink: %s', group_id)
+            logging.info('GroupLink: %s', url_id)
+            url_id = url_id.replace('group/', '')
+            utm_term = 'group'
         if url_id:
             obj = models.ShortURLs.query(
                 models.ShortURLs.url_id == url_id).get()
@@ -71,9 +71,13 @@ class HomeHandler(webapp2.RequestHandler):
                 _send_to_ga(obj.url_id, ip_address, obj.account.token)
             default_url = obj.account.default_url
             playstore_url = obj.account.playstore_url or default_url
-            playstore_url = (
-                playstore_url + '&utm_content=' + url_id + '&utm_term=' +
-                group_id)
+            utm_query = ('&utm_source=pgurin&utm_content=' + url_id +
+                         '&utm_medium=app&utm_campaign=referrer&utm_term=' +
+                         utm_term)
+            playstore_url = playstore_url + utm_query
+            if url_id == 'uqwa6x':
+                playstore_url = ('https://drfa7.app.goo.gl/?link=' +
+                                 playstore_url + '&apn=com.guru.prediction')
             context = {
                 'default_url': default_url,
                 'android_url': obj.android_url or '',
