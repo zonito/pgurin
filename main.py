@@ -58,15 +58,28 @@ class HomeHandler(webapp2.RequestHandler):
             return url_id
         return wrapper(url_id)
 
+    def update_ga(self, obj):
+        """Return False, if request is from bot."""
+        user_agent = self.request.headers.get('User-Agent', '..').lower()
+        is_bot = False
+        for bot in ['applebot', 'slurp', 'dataminr', 'fb_iab']:
+            if bot in user_agent:
+                is_bot = True
+        if not is_bot:
+            ip_address = os.environ['REMOTE_ADDR']
+            models.IPMapping(
+                ip_address=ip_address,
+                short_url=obj
+            ).put()
+            logging.info(ip_address)
+            _send_to_ga(obj.url_id, ip_address, obj.account.token)
+        return is_bot
+
     def get(self):
         """GET request."""
         url_id = self.request.path[1:]
         utm_term = 'normal'
         medium = 'app'
-        if 'claim/' in url_id:
-            logging.info(url_id)
-            url_id = url_id.replace('claim/', '')
-            utm_term = 'claim'
         if 'group/' in url_id:
             logging.info('GroupLink: %s', url_id)
             medium = url_id.replace('group/', '')
@@ -78,19 +91,7 @@ class HomeHandler(webapp2.RequestHandler):
             if not obj:
                 self.response.out.write('404 Page not found')
                 return
-            user_agent = self.request.headers.get('User-Agent', '..').lower()
-            is_bot = False
-            for bot in ['applebot', 'slurp', 'dataminr', 'fb_iab']:
-                if bot in user_agent:
-                    is_bot = True
-            if not is_bot:
-                ip_address = os.environ['REMOTE_ADDR']
-                models.IPMapping(
-                    ip_address=ip_address,
-                    short_url=obj
-                ).put()
-                logging.info(ip_address)
-                _send_to_ga(obj.url_id, ip_address, obj.account.token)
+            self.update_ga(obj)
             default_url = obj.account.default_url
             playstore_url = obj.account.playstore_url or default_url
             utm_query = urllib.urlencode(
