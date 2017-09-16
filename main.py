@@ -103,7 +103,7 @@ class HomeHandler(webapp2.RequestHandler):
                     utm_term=utm_term
                 )
             )
-            playstore_url = playstore_url + utm_query
+            playstore_url = playstore_url + '&' + utm_query
             params = urllib.urlencode(
                 dict(link=playstore_url, apn='com.guru.prediction'))
             playstore_url = ('https://drfa7.app.goo.gl/?' + params)
