@@ -7,10 +7,14 @@ import json
 import logging
 import models
 import os
-import webapp2
 import urllib
+import utils
+import webapp2
 from google.appengine.api import taskqueue
 from google.appengine.ext.webapp import template
+
+
+_PG_API_URL = 'https://dev-dot-prediction-prd.appspot.com/_ah/api/prediction/v1'
 
 
 def _send_to_ga(url_id, ip_address, token):
@@ -38,19 +42,36 @@ def _send_to_ga(url_id, ip_address, token):
 class HomeHandler(webapp2.RequestHandler):
 
     """Displays redirect page."""
+    @staticmethod
+    def get_group_urlid(url_id):
+        """Return group url id"""
+        @utils.Cache('group:%s' % url_id, 3600 * 24)
+        def wrapper(url_id):
+            """For cache"""
+            payload = {'user_id': 0, 'recid': url_id}
+            response = utils.make_request(
+                _PG_API_URL + '/group/referral', json.dumps(payload),
+                method='POST')
+            logging.info(response)
+            if response.get('success'):
+                url_id = response.get('reason')
+            return url_id
+        return wrapper(url_id)
 
     def get(self):
         """GET request."""
         url_id = self.request.path[1:]
         utm_term = 'normal'
+        medium = 'app'
         if 'claim/' in url_id:
             logging.info(url_id)
             url_id = url_id.replace('claim/', '')
             utm_term = 'claim'
         if 'group/' in url_id:
             logging.info('GroupLink: %s', url_id)
-            url_id = url_id.replace('group/', '')
+            medium = url_id.replace('group/', '')
             utm_term = 'group'
+            url_id = self.get_group_urlid(medium)
         if url_id:
             obj = models.ShortURLs.query(
                 models.ShortURLs.url_id == url_id).get()
@@ -72,28 +93,33 @@ class HomeHandler(webapp2.RequestHandler):
                 _send_to_ga(obj.url_id, ip_address, obj.account.token)
             default_url = obj.account.default_url
             playstore_url = obj.account.playstore_url or default_url
-            utm_query = ('&utm_source=pgurin&utm_content=' + url_id +
-                         '&utm_medium=app&utm_campaign=referrer&utm_term=' +
-                         utm_term)
+            utm_query = urllib.urlencode(
+                dict(
+                    utm_source='pgurin',
+                    utm_content=url_id,
+                    utm_medium=medium,
+                    utm_campaign='referral',
+                    utm_term=utm_term
+                )
+            )
             playstore_url = playstore_url + utm_query
-            if url_id == 'uqwa6x':
-                params = urllib.urlencode(
-                    dict(link=playstore_url, apn='com.guru.prediction'))
-                playstore_url = ('https://drfa7.app.goo.gl/?' + params)
+            params = urllib.urlencode(
+                dict(link=playstore_url, apn='com.guru.prediction'))
+            playstore_url = ('https://drfa7.app.goo.gl/?' + params)
             logging.info(playstore_url)
-            context = {
-                'default_url': default_url,
-                'android_url': obj.android_url or '',
-                'playstore_url': playstore_url,
-                'ios_url': obj.ios_url or '',
-                'appstore_url': obj.account.appstore_url or default_url,
-                'windows_url': obj.windows_url or '',
-                'winstore_url': obj.account.winstore_url or default_url,
-                'description': obj.account.description,
-                'title': obj.account.title,
-                'banner': obj.account.banner,
-                'delay': obj.delay
-            }
+            context = dict(
+                default_url=default_url,
+                android_url=obj.android_url or '',
+                playstore_url=playstore_url,
+                ios_url=obj.ios_url or '',
+                appstore_url=obj.account.appstore_url or default_url,
+                windows_url=obj.windows_url or '',
+                winstore_url=obj.account.winstore_url or default_url,
+                description=obj.account.description,
+                title=obj.account.title,
+                banner=obj.account.banner,
+                delay=obj.delay
+            )
             file_name = os.path.join(
                 os.path.dirname(__file__), 'templates/index.html')
             content = template.render(file_name, context)

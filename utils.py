@@ -1,9 +1,11 @@
 """Prediction Utility and constant classes."""
 
 import functools
+import json
 import logging
 import time
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
 
 
 # pylint: disable=W0232,R0903
@@ -113,3 +115,31 @@ def get_utf_str(message):
     except Exception as exp:
         logging.warn(exp)
     return message.encode('utf-8')
+
+
+@InTransaction(retries=3)
+def make_request(url, payload='', headers=None, method=urlfetch.GET):
+    """Make http request."""
+    headers = headers or {}
+    if not headers.get('User-Agent'):
+        headers.update(
+            {'User-Agent': 'pgurin', 'Content-Type': 'application/json'})
+    try:
+        urlfetch.set_default_fetch_deadline(15)
+        post_response = urlfetch.fetch(
+            url=url,
+            payload=payload,
+            method=method,
+            headers=headers,
+            validate_certificate=True)
+        if post_response.status_code in [200, 201]:
+            # logging.info(post_response.content)
+            if 'webhook' in url:
+                return post_response.content
+            return json.loads(post_response.content)
+        logging.warn(
+            'POST request Failed: %s, Payload: %s, Headers: %s, Status: %s',
+            url, payload, headers, post_response.status_code)
+    except Exception as exp:
+        logging.warn(exp)
+    return {}

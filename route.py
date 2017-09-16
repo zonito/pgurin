@@ -18,7 +18,7 @@ APPLICATION = webapp2.WSGIApplication([
         name='AnalyticsTasks'),
     webapp2.Route(
         '/cron/removeip', cron.RemoveIPHandler, name='RemoveIP'),
-    (r'/[\w\s\/]*', main.HomeHandler)
+    (r'/.*', main.HomeHandler)
 ], config=appengine_config.CONFIG, debug=not appengine_config.IS_PROD)
 
 API = endpoints.api_server(
