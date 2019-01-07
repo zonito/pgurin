@@ -69,6 +69,7 @@ def create(request):
     account = _get_account(request.token)
     if not account:
         return False, _NO_ACCOUNT, None
+    logging.info('Data: %s', request.data)
     try:
         data = json.loads(request.data)
     except ValueError as error:

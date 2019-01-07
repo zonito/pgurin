@@ -7,9 +7,9 @@ import os
 import time
 
 from google.appengine.api import taskqueue
-# from google.appengine.ext import vendor
+from google.appengine.ext import vendor
 
-# vendor.add('lib')
+vendor.add('lib')
 
 CONFIG = {}
 CONFIG['webapp2_extras.sessions'] = dict(secret_key='pgurin')

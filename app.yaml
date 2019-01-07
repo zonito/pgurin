@@ -1,5 +1,5 @@
-application: pgur-in
-version: 1-0-1
+# application: pgur-in
+# version: 1-0-1
 runtime: python27
 threadsafe: true
 api_version: 1
@@ -41,7 +41,7 @@ handlers:
 
 # Endpoints handler
 # - url: /_ah/api/.*
-- url: /_ah/spi/.*
+- url: /_ah/api/.*
   script: route.API
 
 - url: /.*
@@ -53,12 +53,12 @@ inbound_services:
 libraries:
 - name: webapp2
   version: latest
-- name: endpoints
+# - name: endpoints
+#   version: latest
+- name: pycrypto
   version: latest
-# - name: pycrypto
-#   version: latest
-# - name: ssl
-#   version: latest
+- name: ssl
+  version: latest
 
 error_handlers:
   - file: templates/default_error.html
